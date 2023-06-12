@@ -1,4 +1,4 @@
-export default function Sidebar() {
+export default function Sidebar({ currentPage, navigationHandler }) {
   return (
     <div className="w-64 flex h-screen flex-col justify-between border-e bg-yellow-500 fixed">
       <div className="px-4 py-6">
@@ -9,8 +9,10 @@ export default function Sidebar() {
         <ul className="mt-6 space-y-1">
           <li>
             <a
-              href=""
-              className="block rounded-lg  bg-yellow-600 px-4 py-2 text-sm font-medium text-white tracking-wide"
+              onClick={() => navigationHandler("dashboard")}
+              className={`cursor-pointer block rounded-lg px-4 py-2 text-sm font-medium text-white hover:bg-yellow-600 tracking-wide ${
+                currentPage === "dashboard" ? "bg-yellow-600" : ""
+              }`}
             >
               Dashboard
             </a>
@@ -18,8 +20,10 @@ export default function Sidebar() {
 
           <li>
             <a
-              href=""
-              className="block rounded-lg px-4 py-2 text-sm font-medium text-white hover:bg-yellow-600 tracking-wide"
+              onClick={() => navigationHandler("items")}
+              className={`cursor-pointer block rounded-lg px-4 py-2 text-sm font-medium text-white hover:bg-yellow-600 tracking-wide ${
+                currentPage === "items" ? "bg-yellow-600" : ""
+              }`}
             >
               Items
             </a>
@@ -27,8 +31,10 @@ export default function Sidebar() {
 
           <li>
             <a
-              href=""
-              className="block rounded-lg px-4 py-2 text-sm font-medium text-white hover:bg-yellow-600 tracking-wide"
+              onClick={() => navigationHandler("categories")}
+              className={`cursor-pointer block rounded-lg px-4 py-2 text-sm font-medium text-white hover:bg-yellow-600 tracking-wide ${
+                currentPage === "categories" ? "bg-yellow-600" : ""
+              }`}
             >
               Categories
             </a>

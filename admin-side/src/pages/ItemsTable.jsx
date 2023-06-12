@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import ModalAddItem from "../components/ModalAddItem";
 
 export default function ItemsTable() {
-  const [items, setItems] = useState();
+  const [items, setItems] = useState([]);
+  const [open, setOpen] = useState(false);
 
   const fetchItems = async () => {
     try {
@@ -10,7 +12,6 @@ export default function ItemsTable() {
         url: "http://localhost:3000/items?_embed=ingredients&_expand=category&_expand=user",
       });
       setItems(() => data);
-      console.log(data);
     } catch (err) {
       console.log(err);
     }
@@ -23,6 +24,18 @@ export default function ItemsTable() {
   return (
     <div className="ml-64 px-4 py-6">
       <div className="mx-auto pb-8 w-full max-w-7xl overflow-x-auto">
+        <div>
+          <div className="flex flex-row justify-between">
+            <h1 className="text-xl font-semibold">Items</h1>
+            <button
+              onClick={() => setOpen(true)}
+              className="mb-5 px-6 py-2 rounded-lg bg-yellow-500 text-white hover:bg-yellow-600"
+            >
+              Add Item
+            </button>
+          </div>
+        </div>
+        <ModalAddItem open={open} onClose={() => setOpen(false)} />
         <table className="px-4 min-w-full rounded-md border border-gray-200 overflow-hidden">
           <thead className="min-w-full bg-gray-100 text-left text-gray-700">
             <tr>
@@ -84,7 +97,7 @@ export default function ItemsTable() {
                     <ol>
                       {item.ingredients.map((e, i) => {
                         return (
-                          <li>
+                          <li key={e.id}>
                             {++i}. {e.name}
                           </li>
                         );
