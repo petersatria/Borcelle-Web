@@ -13,7 +13,7 @@ export default function ModalAddItem({ open, onClose }) {
     createdAt: new Date(),
     updatedAt: new Date(),
   });
-  const [ingredients, setIngredients] = useState({});
+  const [ingredients, setIngredients] = useState([{}]);
   const [categories, setCategories] = useState([]);
 
   const handleAddInput = (e) => {
@@ -36,15 +36,42 @@ export default function ModalAddItem({ open, onClose }) {
   };
 
   const handleOnChangeForm = (e) => {
+    let value = e.target.value;
+    if (e.target.name === "price" || e.target.name === "categoryId") {
+      value = +e.target.value;
+    }
     setItem({
       ...item,
-      [e.target.name]: e.target.value,
+      [e.target.name]: value,
     });
   };
 
-  const handleSubmitForm = (e) => {
+  const handleSubmitForm = async (e) => {
     e.preventDefault();
-    console.log(item);
+    try {
+      const { data } = await axios.post("http://localhost:3000/items", item);
+      await axios.post("http://localhost:3000/ingredients", {
+        name: ingredients,
+        itemId: data.id,
+      });
+
+      const arr = [];
+      input.forEach((element) => {
+        const promise = axios.post("http://localhost:3000/ingredients", {
+          name: element,
+          itemId: data.id,
+        });
+        arr.push(promise);
+      });
+
+      Promise.all(arr)
+        .then((res) => console.log(res))
+        .catch((err) => {
+          throw err;
+        });
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const fetchCategories = async () => {
@@ -109,7 +136,7 @@ export default function ModalAddItem({ open, onClose }) {
             name="price"
             onChange={handleOnChangeForm}
           />
-          <label htmlFor="category">Category</label>
+          <label htmlFor="categoryId">Category</label>
           {/* <input
             type="text"
             className="border border-gray-300 rounded px-2 py-1 w-96 mb-2"
@@ -117,7 +144,7 @@ export default function ModalAddItem({ open, onClose }) {
             onChange={handleOnChangeForm}
           /> */}
           <select
-            name="category"
+            name="categoryId"
             className="border border-gray-300 rounded px-2 py-1 w-96 mb-2"
             onChange={handleOnChangeForm}
           >
@@ -136,12 +163,14 @@ export default function ModalAddItem({ open, onClose }) {
             type="text"
             className="border border-gray-300 rounded px-2 py-1 w-96 mb-2"
             name="imgUrl"
+            onChange={handleOnChangeForm}
           />
           <label htmlFor="ingredients">Ingredients</label>
           <input
             type="text"
             className="border border-gray-300 rounded px-2 py-1 w-96 mb-2"
             name="ingredients"
+            onChange={(e) => setIngredients(e.target.value)}
           />
 
           {input &&
@@ -167,7 +196,7 @@ export default function ModalAddItem({ open, onClose }) {
           <div className="flex justify-between">
             <button
               onClick={handleAddInput}
-              className="px-3 py-2 rounded-lg bg-yellow-500 text-white hover:bg-yellow-600"
+              className="px-3 py-2 rounded-lg bg-primary-yellow text-white hover:bg-yellow-600"
             >
               Add Ingredients
             </button>

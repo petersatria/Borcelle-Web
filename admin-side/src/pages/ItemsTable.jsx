@@ -29,7 +29,7 @@ export default function ItemsTable() {
             <h1 className="text-xl font-semibold">Items</h1>
             <button
               onClick={() => setOpen(true)}
-              className="mb-5 px-6 py-2 rounded-lg bg-yellow-500 text-white hover:bg-yellow-600"
+              className="mb-5 px-6 py-2 rounded-lg bg-primary-yellow text-white hover:bg-yellow-600"
             >
               Add Item
             </button>

@@ -1,6 +1,6 @@
 export default function Sidebar({ currentPage, navigationHandler }) {
   return (
-    <div className="w-64 flex h-screen flex-col justify-between border-e bg-yellow-500 fixed">
+    <div className="w-64 flex h-screen flex-col justify-between border-e bg-primary-yellow fixed">
       <div className="px-4 py-6">
         <span className="grid h-10 place-content-center rounded-lg bg-gray-100 text-xs text-gray-600">
           Logo

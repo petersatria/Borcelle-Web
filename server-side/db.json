@@ -43,6 +43,17 @@
       "categoryId": 2,
       "createdAt": "2023-06-12T06:17:43.794Z",
       "updatedAt": "2023-06-12T06:17:43.794Z"
+    },
+    {
+      "name": "Beef Tenderloin On The Grill (AUS)",
+      "description": " Fresh Cut French Fries, Bok Coy\n and Kailan Wok (200 gr) ",
+      "price": "185000",
+      "imgUrl": "https://img.freepik.com/free-photo/close-up-grilled-steak-served-with-roasted-potato_140725-4981.jpg?w=1800&t=st=1686588170~exp=1686588770~hmac=fa264e8b9e77587eecc0abed40cdb4c58f3f9c202ebf95b6db8a3d9b0752ff80",
+      "userId": 1,
+      "categoryId": "2",
+      "createdAt": "2023-06-12T16:38:42.311Z",
+      "updatedAt": "2023-06-12T16:38:42.311Z",
+      "id": 4
     }
   ],
   "categories": [
@@ -85,6 +96,26 @@
       "id": 6,
       "itemId": 3,
       "name": "Prunes"
+    },
+    {
+      "name": "Tenderloin",
+      "itemId": 4,
+      "id": 7
+    },
+    {
+      "name": "Potato",
+      "itemId": 4,
+      "id": 8
+    },
+    {
+      "name": "Kalian",
+      "itemId": 4,
+      "id": 9
+    },
+    {
+      "name": "Bok Coy",
+      "itemId": 4,
+      "id": 10
     }
   ]
 }
