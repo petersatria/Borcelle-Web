@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import useFetch from "../hooks/useFetch";
 
-export default function ModalAddItem({ open, onClose, itemEdit }) {
+export default function ModalAddItem({ open, onClose, itemEdit, fetchData }) {
   const [input, setInput] = useState([]);
   const [item, setItem] = useState({
     name: "",
@@ -14,15 +14,16 @@ export default function ModalAddItem({ open, onClose, itemEdit }) {
     createdAt: new Date(),
     updatedAt: new Date(),
   });
-  const [ingredients, setIngredients] = useState([{}]);
+  const [ingredients, setIngredients] = useState("");
   const { data: categories } = useFetch("categories");
   const [isEdit, setIsEdit] = useState(false);
 
   useEffect(() => {
+    console.log(itemEdit);
     if (itemEdit) {
       setItem(itemEdit);
-      setIngredients(itemEdit.ingredients);
-      setInput(itemEdit.ingredients);
+      setIngredients(itemEdit.ingredients[0].name);
+      setInput(itemEdit.ingredients.slice(1));
       setIsEdit(true);
     }
   }, [itemEdit]);
@@ -60,28 +61,60 @@ export default function ModalAddItem({ open, onClose, itemEdit }) {
   const handleSubmitForm = async (e) => {
     try {
       e.preventDefault();
-      const { data } = await axios.post("http://localhost:3000/items", item);
-      await axios.post("http://localhost:3000/ingredients", {
-        name: ingredients,
-        itemId: data.id,
-      });
-
       const arr = [];
-      input.forEach((element) => {
-        const promise = axios.post("http://localhost:3000/ingredients", {
-          name: element,
+      if (isEdit) {
+        let id = itemEdit.ingredients[0].id;
+        let temp = itemEdit.ingredients.length;
+
+        console.log(itemEdit.ingredients[0].id, "idd");
+        delete item.category;
+        delete item.ingredients;
+
+        await axios.put("http://localhost:3000/items/" + itemEdit.id, item);
+        await axios.put("http://localhost:3000/ingredients/" + id, {
+          name: ingredients,
+          itemId: itemEdit.id,
+        });
+
+        console.log(temp);
+        console.log(itemEdit);
+
+        input.forEach((element) => {
+          const promise = axios.put(
+            "http://localhost:3000/ingredients/" + element.id,
+            {
+              name: element,
+              itemId: itemEdit.id,
+            }
+          );
+          arr.push(promise);
+        });
+      } else {
+        const { data } = await axios.post("http://localhost:3000/items", item);
+        await axios.post("http://localhost:3000/ingredients", {
+          name: ingredients,
           itemId: data.id,
         });
-        arr.push(promise);
-      });
+
+        input.forEach((element) => {
+          const promise = axios.post("http://localhost:3000/ingredients", {
+            name: element,
+            itemId: data.id,
+          });
+          arr.push(promise);
+        });
+      }
 
       Promise.all(arr)
-        .then((res) => console.log(res))
+        .then((res) => {
+          fetchData();
+          console.log(res);
+        })
         .catch((err) => {
           throw err;
         });
     } catch (err) {
-      console.log(err);
+      console.log(err, "yakah");
     }
   };
 
@@ -99,6 +132,8 @@ export default function ModalAddItem({ open, onClose, itemEdit }) {
     });
     setInput([]);
     setIsEdit(false);
+
+    console.log(input);
   };
 
   return (
@@ -182,7 +217,7 @@ export default function ModalAddItem({ open, onClose, itemEdit }) {
             className="border border-gray-300 rounded px-2 py-1 w-96 mb-2"
             name="ingredients"
             onChange={(e) => setIngredients(e.target.value)}
-            value={isEdit ? itemEdit?.ingredients[0].name : ingredients}
+            value={ingredients}
           />
 
           {input &&
@@ -196,22 +231,30 @@ export default function ModalAddItem({ open, onClose, itemEdit }) {
                     onChange={(e) => handleValueChange(e, i)}
                     value={data.name}
                   />
-                  <button
-                    onClick={(e) => handleDeleteInput(e, i)}
-                    className="text-red-500"
-                  >
-                    remove
-                  </button>
+                  {isEdit ? (
+                    ""
+                  ) : (
+                    <button
+                      onClick={(e) => handleDeleteInput(e, i)}
+                      className="text-red-500"
+                    >
+                      remove
+                    </button>
+                  )}
                 </div>
               );
             })}
           <div className="flex justify-between">
-            <button
-              onClick={handleAddInput}
-              className="px-3 py-2 rounded-lg bg-primary-yellow text-white hover:bg-yellow-600"
-            >
-              Add Ingredients
-            </button>
+            {isEdit ? (
+              ""
+            ) : (
+              <button
+                onClick={handleAddInput}
+                className="px-3 py-2 rounded-lg bg-primary-yellow text-white hover:bg-yellow-600"
+              >
+                Add Ingredients
+              </button>
+            )}
             <button
               onClick={(e) => {
                 onClose();

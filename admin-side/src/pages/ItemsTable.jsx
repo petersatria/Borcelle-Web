@@ -30,6 +30,7 @@ export default function ItemsTable() {
       const data = await response.json();
       setItemEdit(data);
       setOpen(true);
+      fetchData();
     } catch (err) {
       console.log(err);
     }
@@ -53,6 +54,7 @@ export default function ItemsTable() {
           open={open}
           onClose={() => setOpen(false)}
           itemEdit={itemEdit}
+          fetchData={fetchData}
         />
         <table className="px-4 min-w-full rounded-md border border-gray-200 overflow-hidden">
           <thead className="min-w-full bg-gray-100 text-left text-gray-700">
