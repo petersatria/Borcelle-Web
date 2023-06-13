@@ -1,25 +1,13 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import ModalAddItem from "../components/ModalAddItem";
+import useFetch from "../hooks/useFetch";
 
 export default function ItemsTable() {
-  const [items, setItems] = useState([]);
   const [open, setOpen] = useState(false);
 
-  const fetchItems = async () => {
-    try {
-      const { data } = await axios({
-        url: "http://localhost:3000/items?_embed=ingredients&_expand=category&_expand=user",
-      });
-      setItems(() => data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  useEffect(() => {
-    fetchItems();
-  }, []);
+  const items = useFetch(
+    "items?_embed=ingredients&_expand=category&_expand=user"
+  );
 
   return (
     <div className="ml-64 px-4 py-6">
@@ -62,6 +50,9 @@ export default function ItemsTable() {
               </th>
               <th className="py-3 px-4 text-base font-medium tracking-wide">
                 Author
+              </th>
+              <th className="py-3 px-4 text-base font-medium tracking-wide">
+                Action
               </th>
             </tr>
           </thead>
@@ -106,6 +97,10 @@ export default function ItemsTable() {
                   </td>
                   <td className="py-3 px-4 text-sm font-medium">
                     {item.user.username}
+                  </td>
+                  <td className="py-3 px-4 text-sm font-medium">
+                    <a className="cursor-pointer text-yellow-600">Edit</a>
+                    <a className="cursor-pointer text-red-500 ml-4">Delete</a>
                   </td>
                 </tr>
               ))}

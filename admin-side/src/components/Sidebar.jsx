@@ -20,23 +20,22 @@ export default function Sidebar({ currentPage, navigationHandler }) {
 
           <li>
             <a
-              onClick={() => navigationHandler("items")}
-              className={`cursor-pointer block rounded-lg px-4 py-2 text-sm font-medium text-white hover:bg-yellow-600 tracking-wide ${
-                currentPage === "items" ? "bg-yellow-600" : ""
-              }`}
-            >
-              Items
-            </a>
-          </li>
-
-          <li>
-            <a
               onClick={() => navigationHandler("categories")}
               className={`cursor-pointer block rounded-lg px-4 py-2 text-sm font-medium text-white hover:bg-yellow-600 tracking-wide ${
                 currentPage === "categories" ? "bg-yellow-600" : ""
               }`}
             >
               Categories
+            </a>
+          </li>
+          <li>
+            <a
+              onClick={() => navigationHandler("register-admin")}
+              className={`cursor-pointer block rounded-lg px-4 py-2 text-sm font-medium text-white hover:bg-yellow-600 tracking-wide ${
+                currentPage === "register-admin" ? "bg-yellow-600" : ""
+              }`}
+            >
+              Regsiter Admin
             </a>
           </li>
         </ul>

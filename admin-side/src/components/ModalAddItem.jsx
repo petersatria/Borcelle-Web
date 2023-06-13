@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import useFetch from "../hooks/useFetch";
 
 export default function ModalAddItem({ open, onClose }) {
   const [input, setInput] = useState([]);
@@ -14,7 +15,7 @@ export default function ModalAddItem({ open, onClose }) {
     updatedAt: new Date(),
   });
   const [ingredients, setIngredients] = useState([{}]);
-  const [categories, setCategories] = useState([]);
+  const categories = useFetch("categories");
 
   const handleAddInput = (e) => {
     e.preventDefault();
@@ -74,21 +75,6 @@ export default function ModalAddItem({ open, onClose }) {
     }
   };
 
-  const fetchCategories = async () => {
-    try {
-      const { data } = await axios({
-        url: "http://localhost:3000/categories",
-      });
-      setCategories(() => data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
   return (
     <div
       onClick={onClose}
@@ -137,18 +123,13 @@ export default function ModalAddItem({ open, onClose }) {
             onChange={handleOnChangeForm}
           />
           <label htmlFor="categoryId">Category</label>
-          {/* <input
-            type="text"
-            className="border border-gray-300 rounded px-2 py-1 w-96 mb-2"
-            name="category"
-            onChange={handleOnChangeForm}
-          /> */}
           <select
             name="categoryId"
             className="border border-gray-300 rounded px-2 py-1 w-96 mb-2"
             onChange={handleOnChangeForm}
+            defaultValue={""}
           >
-            <option selected disabled>
+            <option disabled value={""}>
               -- Select Category --
             </option>
             {categories &&

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import Sidebar from "./Components/Sidebar";
 import ItemsTable from "./pages/ItemsTable";
+import CategoriesTable from "./pages/CategoriesTable";
+import RegisterAdmin from "./pages/RegisterAdmin";
 
 function App() {
   const [currentPage, setCurrentPage] = useState("dashboard");
@@ -15,7 +17,9 @@ function App() {
         currentPage={currentPage}
         navigationHandler={navigationHandler}
       />
-      {currentPage === "items" ? <ItemsTable /> : ""}
+      {currentPage === "dashboard" ? <ItemsTable /> : ""}
+      {currentPage === "categories" ? <CategoriesTable /> : ""}
+      {currentPage === "register-admin" ? <RegisterAdmin /> : ""}
     </>
   );
 }
