@@ -1,11 +1,34 @@
 import { useEffect, useState } from "react";
 import ModalAddCategory from "../components/ModalAddCategory";
 import useFetch from "../hooks/useFetch";
+import { Link } from "react-router-dom";
 
-export default function ItemsTable() {
+export default function CategoriesTable() {
   const [open, setOpen] = useState(false);
+  const [categoryEdit, setCategoryEdit] = useState();
 
-  const categories = useFetch("categories");
+  let { data: categories, fetchData } = useFetch("categories");
+  const handleDelete = async (id) => {
+    try {
+      await fetch("http://localhost:3000/categories/" + id, {
+        method: "DELETE",
+      });
+      fetchData();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleEdit = async (id) => {
+    try {
+      const response = await fetch("http://localhost:3000/categories/" + id);
+      const data = await response.json();
+      setCategoryEdit(data);
+      setOpen(true);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div className="ml-64 px-4 py-6">
@@ -21,7 +44,12 @@ export default function ItemsTable() {
             </button>
           </div>
         </div>
-        <ModalAddCategory open={open} onClose={() => setOpen(false)} />
+        <ModalAddCategory
+          open={open}
+          onClose={() => setOpen(false)}
+          fetchData={fetchData}
+          categoryEdit={categoryEdit}
+        />
         <table className="px-4 min-w-full rounded-md border border-gray-200 overflow-hidden">
           <thead className="min-w-full bg-gray-100 text-left text-gray-700">
             <tr>
@@ -44,7 +72,18 @@ export default function ItemsTable() {
                     <td className="py-3 px-4 text-sm font-medium">{++i}</td>
                     <td className="py-3 px-4 text-sm font-medium">{e.name}</td>
                     <td className="py-3 px-4 text-sm font-medium">
-                      <a className="cursor-pointer text-red-500">Delete</a>
+                      <Link
+                        onClick={() => handleEdit(e.id)}
+                        className="cursor-pointer text-yellow-600 mr-4"
+                      >
+                        Edit
+                      </Link>
+                      <Link
+                        onClick={() => handleDelete(e.id)}
+                        className="cursor-pointer text-red-500"
+                      >
+                        Delete
+                      </Link>
                     </td>
                   </tr>
                 );

@@ -2,20 +2,30 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import useFetch from "../hooks/useFetch";
 
-export default function ModalAddItem({ open, onClose }) {
+export default function ModalAddItem({ open, onClose, itemEdit }) {
   const [input, setInput] = useState([]);
   const [item, setItem] = useState({
     name: "",
     description: "",
-    price: 0,
+    price: "",
     imgUrl: "",
     userId: 1,
-    categoryId: 0,
+    categoryId: "",
     createdAt: new Date(),
     updatedAt: new Date(),
   });
   const [ingredients, setIngredients] = useState([{}]);
-  const categories = useFetch("categories");
+  const { data: categories } = useFetch("categories");
+  const [isEdit, setIsEdit] = useState(false);
+
+  useEffect(() => {
+    if (itemEdit) {
+      setItem(itemEdit);
+      setIngredients(itemEdit.ingredients);
+      setInput(itemEdit.ingredients);
+      setIsEdit(true);
+    }
+  }, [itemEdit]);
 
   const handleAddInput = (e) => {
     e.preventDefault();
@@ -29,7 +39,7 @@ export default function ModalAddItem({ open, onClose }) {
     setInput(inputValue);
   };
 
-  const handleDeleteINput = (e, i) => {
+  const handleDeleteInput = (e, i) => {
     e.preventDefault();
     const deleteInput = [...input];
     deleteInput.splice(i, 1);
@@ -48,8 +58,8 @@ export default function ModalAddItem({ open, onClose }) {
   };
 
   const handleSubmitForm = async (e) => {
-    e.preventDefault();
     try {
+      e.preventDefault();
       const { data } = await axios.post("http://localhost:3000/items", item);
       await axios.post("http://localhost:3000/ingredients", {
         name: ingredients,
@@ -75,9 +85,25 @@ export default function ModalAddItem({ open, onClose }) {
     }
   };
 
+  const handleCloseModal = () => {
+    onClose();
+    setItem({
+      name: "",
+      description: "",
+      price: "",
+      imgUrl: "",
+      userId: 1,
+      categoryId: "",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+    setInput([]);
+    setIsEdit(false);
+  };
+
   return (
     <div
-      onClick={onClose}
+      onClick={handleCloseModal}
       className={`fixed inset-0 flex justify-center items-center transition-colors ${
         open ? "visible bg-black/20" : "invisible"
       }`}
@@ -91,7 +117,7 @@ export default function ModalAddItem({ open, onClose }) {
         <div className="flex justify-between">
           <h1>Create new item</h1>
           <button
-            onClick={onClose}
+            onClick={handleCloseModal}
             className="text-gray-400 bg-white hover:text-gray-600"
           >
             X
@@ -105,6 +131,7 @@ export default function ModalAddItem({ open, onClose }) {
             className="border border-gray-300 rounded px-2 py-1 w-96 mb-2"
             name="name"
             onChange={handleOnChangeForm}
+            value={item.name}
           />
 
           <label htmlFor="description">Description</label>
@@ -113,6 +140,7 @@ export default function ModalAddItem({ open, onClose }) {
             className="border border-gray-300 rounded px-2 py-1 w-96 mb-2"
             name="description"
             onChange={handleOnChangeForm}
+            value={item.description}
           />
 
           <label htmlFor="price">Price</label>
@@ -121,13 +149,14 @@ export default function ModalAddItem({ open, onClose }) {
             className="border border-gray-300 rounded px-2 py-1 w-96 mb-2"
             name="price"
             onChange={handleOnChangeForm}
+            value={item.price}
           />
           <label htmlFor="categoryId">Category</label>
           <select
             name="categoryId"
             className="border border-gray-300 rounded px-2 py-1 w-96 mb-2"
             onChange={handleOnChangeForm}
-            defaultValue={""}
+            value={isEdit ? itemEdit?.categoryId : ""}
           >
             <option disabled value={""}>
               -- Select Category --
@@ -145,6 +174,7 @@ export default function ModalAddItem({ open, onClose }) {
             className="border border-gray-300 rounded px-2 py-1 w-96 mb-2"
             name="imgUrl"
             onChange={handleOnChangeForm}
+            value={item.imgUrl}
           />
           <label htmlFor="ingredients">Ingredients</label>
           <input
@@ -152,6 +182,7 @@ export default function ModalAddItem({ open, onClose }) {
             className="border border-gray-300 rounded px-2 py-1 w-96 mb-2"
             name="ingredients"
             onChange={(e) => setIngredients(e.target.value)}
+            value={isEdit ? itemEdit?.ingredients[0].name : ingredients}
           />
 
           {input &&
@@ -163,10 +194,10 @@ export default function ModalAddItem({ open, onClose }) {
                     className="border border-gray-300 rounded px-2 py-1 w-full mr-4 mb-2"
                     name="ingredients"
                     onChange={(e) => handleValueChange(e, i)}
-                    value={data}
+                    value={data.name}
                   />
                   <button
-                    onClick={(e) => handleDeleteINput(e, i)}
+                    onClick={(e) => handleDeleteInput(e, i)}
                     className="text-red-500"
                   >
                     remove

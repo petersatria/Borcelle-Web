@@ -1,9 +1,22 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-export default function ModalAddCategory({ open, onClose }) {
+export default function ModalAddCategory({
+  open,
+  onClose,
+  categoryEdit,
+  fetchData,
+}) {
   const [category, setCategory] = useState("");
   const [isInputValid, setIsInputValid] = useState(true);
+  const [isEdit, setIsEdit] = useState(false);
+
+  useEffect(() => {
+    if (categoryEdit) {
+      setCategory(categoryEdit.name);
+      setIsEdit(true);
+    }
+  }, [categoryEdit]);
 
   const handleOnChangeForm = (e) => {
     e.preventDefault();
@@ -19,15 +32,26 @@ export default function ModalAddCategory({ open, onClose }) {
       } else {
         setIsInputValid(true);
       }
-      await axios({
-        method: "POST",
-        url: "http://localhost:3000/categories",
-        data: { name: category },
-      });
+      if (isEdit) {
+        await axios({
+          method: "PUT",
+          url: "http://localhost:3000/categories/" + categoryEdit.id,
+          data: { name: category },
+        });
+      } else {
+        await axios({
+          method: "POST",
+          url: "http://localhost:3000/categories",
+          data: { name: category },
+        });
+      }
       setCategory("");
+      fetchData();
       onClose();
     } catch (err) {
       console.log(err);
+    } finally {
+      setIsEdit(false);
     }
   };
 
@@ -35,6 +59,7 @@ export default function ModalAddCategory({ open, onClose }) {
     onClose();
     setIsInputValid(true);
     setCategory("");
+    setIsEdit(false);
   };
 
   return (
@@ -51,7 +76,7 @@ export default function ModalAddCategory({ open, onClose }) {
         }`}
       >
         <div className="flex justify-between">
-          <h1>Create new category</h1>
+          {isEdit ? <h1>Edit category</h1> : <h1>Create new category</h1>}
           <button
             onClick={handleCloseModal}
             className="text-gray-400 bg-white hover:text-gray-600"
