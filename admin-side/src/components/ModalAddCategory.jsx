@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import {
+  fetchCategories,
+  postCategories,
+} from "../store/actions/categoriesAction";
 
 export default function ModalAddCategory({
   open,
@@ -10,6 +15,8 @@ export default function ModalAddCategory({
   const [category, setCategory] = useState("");
   const [isInputValid, setIsInputValid] = useState(true);
   const [isEdit, setIsEdit] = useState(false);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (categoryEdit) {
@@ -39,19 +46,16 @@ export default function ModalAddCategory({
           data: { name: category },
         });
       } else {
-        await axios({
-          method: "POST",
-          url: "http://localhost:3000/categories",
-          data: { name: category },
-        });
+        dispatch(postCategories({ name: category }));
       }
       setCategory("");
-      fetchData();
+      dispatch(fetchCategories());
       onClose();
     } catch (err) {
       console.log(err);
     } finally {
       setIsEdit(false);
+      dispatch(fetchCategories());
     }
   };
 

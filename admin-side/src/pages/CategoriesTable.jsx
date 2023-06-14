@@ -2,28 +2,44 @@ import { useEffect, useState } from "react";
 import ModalAddCategory from "../components/ModalAddCategory";
 import useFetch from "../hooks/useFetch";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  deleteCategory,
+  fetchCategories,
+  fetchCategory,
+} from "../store/actions/categoriesAction";
 
 export default function CategoriesTable() {
   const [open, setOpen] = useState(false);
-  const [categoryEdit, setCategoryEdit] = useState();
+  const [categoryEdit, setCategoryEdit] = useState({});
 
-  let { data: categories, fetchData } = useFetch("categories");
+  const dispatch = useDispatch();
+  const { categories, category } = useSelector((state) => {
+    // console.log(state.categories.category, "<<<<");
+    return state.categories;
+  });
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, []);
+
   const handleDelete = async (id) => {
     try {
-      await fetch("http://localhost:3000/categories/" + id, {
-        method: "DELETE",
-      });
-      fetchData();
+      dispatch(deleteCategory(id));
+      dispatch(fetchCategories());
     } catch (err) {
       console.log(err);
+    } finally {
+      dispatch(fetchCategories());
     }
   };
 
   const handleEdit = async (id) => {
     try {
-      const response = await fetch("http://localhost:3000/categories/" + id);
-      const data = await response.json();
-      setCategoryEdit(data);
+      // const response = await fetch("http://localhost:3000/categories/" + id);
+      // const data = await response.json();
+      dispatch(fetchCategory(id));
+      setCategoryEdit(category); // telat
       setOpen(true);
     } catch (err) {
       console.log(err);
@@ -47,7 +63,7 @@ export default function CategoriesTable() {
         <ModalAddCategory
           open={open}
           onClose={() => setOpen(false)}
-          fetchData={fetchData}
+          // fetchData={fetchData}
           categoryEdit={categoryEdit}
         />
         <table className="px-4 min-w-full rounded-md border border-gray-200 overflow-hidden">
