@@ -2,7 +2,7 @@ import { FETCH_CATEGORIES, FETCH_CATEGORY } from "../actions/actionType"
 
 const initialState = {
   data: [],
-  category: {}
+  category: null
 }
 
 function categoriesReducer(state = initialState, action) {

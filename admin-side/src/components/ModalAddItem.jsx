@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-import useFetch from "../hooks/useFetch";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCategories } from "../store/actions/categoriesAction";
+import { postItem, updateItem } from "../store/actions/itemsAction";
 
-export default function ModalAddItem({ open, onClose, itemEdit, fetchData }) {
+export default function ModalAddItem({ open, onClose, itemEdit }) {
   const [input, setInput] = useState([]);
   const [item, setItem] = useState({
     name: "",
@@ -15,15 +16,19 @@ export default function ModalAddItem({ open, onClose, itemEdit, fetchData }) {
     updatedAt: new Date(),
   });
   const [ingredients, setIngredients] = useState("");
-  const { data: categories } = useFetch("categories");
+  const dispatch = useDispatch();
+  const { categories } = useSelector((state) => {
+    return state.categories;
+  });
   const [isEdit, setIsEdit] = useState(false);
 
   useEffect(() => {
-    console.log(itemEdit);
+    dispatch(fetchCategories());
     if (itemEdit) {
+      const ingredients = itemEdit.Ingredients.slice(1).map((e) => e.name);
       setItem(itemEdit);
-      setIngredients(itemEdit.ingredients[0].name);
-      setInput(itemEdit.ingredients.slice(1));
+      setIngredients(itemEdit.Ingredients[0]?.name);
+      setInput(ingredients);
       setIsEdit(true);
     }
   }, [itemEdit]);
@@ -63,56 +68,19 @@ export default function ModalAddItem({ open, onClose, itemEdit, fetchData }) {
       e.preventDefault();
       const arr = [];
       if (isEdit) {
-        let id = itemEdit.ingredients[0].id;
-        let temp = itemEdit.ingredients.length;
-
-        console.log(itemEdit.ingredients[0].id, "idd");
-        delete item.category;
-        delete item.ingredients;
-
-        await axios.put("http://localhost:3000/items/" + itemEdit.id, item);
-        await axios.put("http://localhost:3000/ingredients/" + id, {
-          name: ingredients,
-          itemId: itemEdit.id,
-        });
-
-        console.log(temp);
-        console.log(itemEdit);
-
-        input.forEach((element) => {
-          const promise = axios.put(
-            "http://localhost:3000/ingredients/" + element.id,
-            {
-              name: element,
-              itemId: itemEdit.id,
-            }
-          );
-          arr.push(promise);
-        });
+        const payload = {
+          ...item,
+          ingredients: [ingredients, ...input],
+        };
+        console.log(payload);
+        dispatch(updateItem(itemEdit.id, payload));
       } else {
-        const { data } = await axios.post("http://localhost:3000/items", item);
-        await axios.post("http://localhost:3000/ingredients", {
-          name: ingredients,
-          itemId: data.id,
-        });
-
-        input.forEach((element) => {
-          const promise = axios.post("http://localhost:3000/ingredients", {
-            name: element,
-            itemId: data.id,
-          });
-          arr.push(promise);
-        });
+        const payload = {
+          ...item,
+          ingredients: [ingredients, ...input],
+        };
+        dispatch(postItem(payload));
       }
-
-      Promise.all(arr)
-        .then((res) => {
-          fetchData();
-          console.log(res);
-        })
-        .catch((err) => {
-          throw err;
-        });
     } catch (err) {
       console.log(err, "yakah");
     }
@@ -125,12 +93,13 @@ export default function ModalAddItem({ open, onClose, itemEdit, fetchData }) {
       description: "",
       price: "",
       imgUrl: "",
-      userId: 1,
+      userId: 0,
       categoryId: "",
       createdAt: new Date(),
       updatedAt: new Date(),
     });
     setInput([]);
+    setIngredients("");
     setIsEdit(false);
 
     console.log(input);
@@ -191,7 +160,7 @@ export default function ModalAddItem({ open, onClose, itemEdit, fetchData }) {
             name="categoryId"
             className="border border-gray-300 rounded px-2 py-1 w-96 mb-2"
             onChange={handleOnChangeForm}
-            value={isEdit ? itemEdit?.categoryId : ""}
+            value={item.categoryId}
           >
             <option disabled value={""}>
               -- Select Category --
@@ -229,7 +198,7 @@ export default function ModalAddItem({ open, onClose, itemEdit, fetchData }) {
                     className="border border-gray-300 rounded px-2 py-1 w-full mr-4 mb-2"
                     name="ingredients"
                     onChange={(e) => handleValueChange(e, i)}
-                    value={data.name}
+                    value={data}
                   />
                   {isEdit ? (
                     ""

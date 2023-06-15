@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
         const data = await Item.create({
           name, description, price, imgUrl, authorId, categoryId, ingredients
         })
-        if (!req.body.ingredients) throw { name: 'IngredientsRequired' }
+        if (ingredients?.length < 2) throw { name: 'IngredientsRequired' }
         const ingredientsData = ingredients.map(e => {
           return { name: e, itemId: data.id }
         })
@@ -48,7 +48,7 @@ module.exports = (sequelize, DataTypes) => {
         await Item.update({
           name, description, price, imgUrl, authorId, categoryId, ingredients
         }, { where: { id } })
-        if (!req.body.ingredients) throw { name: 'IngredientsRequired' }
+        if (ingredients?.length < 2) throw { name: 'IngredientsRequired' }
 
         const ingredientsData = await Item.findAll({ include: [{ model: sequelize.models.Ingredient }], where: { id } })
         let arr = []

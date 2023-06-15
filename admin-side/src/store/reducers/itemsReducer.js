@@ -1,7 +1,9 @@
-import { FETCH_ITEMS } from "../actions/actionType"
+import { FETCH_ITEM, FETCH_ITEMS } from "../actions/actionType"
 
 const initialState = {
-  items: []
+  items: [],
+  item: null
+
 }
 
 function itemsReducer(state = initialState, action) {
@@ -10,6 +12,11 @@ function itemsReducer(state = initialState, action) {
       return {
         ...state,
         items: action.payload,
+      }
+    case FETCH_ITEM:
+      return {
+        ...state,
+        item: action.payload
       }
     default:
       return state

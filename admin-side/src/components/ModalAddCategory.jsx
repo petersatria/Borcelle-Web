@@ -1,17 +1,11 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import {
-  fetchCategories,
   postCategories,
+  updateCategories,
 } from "../store/actions/categoriesAction";
 
-export default function ModalAddCategory({
-  open,
-  onClose,
-  categoryEdit,
-  fetchData,
-}) {
+export default function ModalAddCategory({ open, onClose, categoryEdit }) {
   const [category, setCategory] = useState("");
   const [isInputValid, setIsInputValid] = useState(true);
   const [isEdit, setIsEdit] = useState(false);
@@ -19,7 +13,6 @@ export default function ModalAddCategory({
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log(categoryEdit, "ada ga");
     if (categoryEdit) {
       setCategory(categoryEdit.name);
       setIsEdit(true);
@@ -41,30 +34,25 @@ export default function ModalAddCategory({
         setIsInputValid(true);
       }
       if (isEdit) {
-        await axios({
-          method: "PUT",
-          url: "http://localhost:3000/categories/" + categoryEdit.id,
-          data: { name: category },
-        });
+        dispatch(updateCategories(categoryEdit.id, { name: category }));
       } else {
+        console.log("add cat");
         dispatch(postCategories({ name: category }));
       }
       setCategory("");
-      dispatch(fetchCategories());
       onClose();
     } catch (err) {
       console.log(err);
     } finally {
       setIsEdit(false);
-      dispatch(fetchCategories());
     }
   };
 
   const handleCloseModal = () => {
+    setIsEdit(false);
+    setCategory("");
     onClose();
     setIsInputValid(true);
-    setCategory("");
-    setIsEdit(false);
   };
 
   return (

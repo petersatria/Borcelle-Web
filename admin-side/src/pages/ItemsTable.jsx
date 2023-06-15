@@ -1,32 +1,33 @@
 import { useEffect, useState } from "react";
 import ModalAddItem from "../components/ModalAddItem";
-import useFetch from "../hooks/useFetch";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchItems } from "../store/actions/itemsAction";
+import {
+  deleteItem,
+  fetchItem,
+  fetchItems,
+} from "../store/actions/itemsAction";
 
 export default function ItemsTable() {
   const [open, setOpen] = useState(false);
   const [itemEdit, setItemEdit] = useState();
 
-  // const { data: items, fetchData } = useFetch(
-  //   "items?_embed=ingredients&_expand=category&_expand=user"
-  // );
   const dispatch = useDispatch();
-  const { items } = useSelector((state) => {
-    return state.items;
-  });
+  const { items, item } = useSelector((state) => state.items);
 
   useEffect(() => {
     dispatch(fetchItems());
   }, []);
 
+  useEffect(() => {
+    if (item) {
+      setItemEdit(item);
+    }
+  }, [item]);
+
   const handleDelete = async (id) => {
     try {
-      await fetch("http://localhost:3000/items/" + id, {
-        method: "DELETE",
-      });
-      // fetchData();
+      dispatch(deleteItem(id));
     } catch (err) {
       console.log(err);
     }
@@ -34,13 +35,8 @@ export default function ItemsTable() {
 
   const handleEdit = async (id) => {
     try {
-      const response = await fetch(
-        `http://localhost:3000/items/${id}?_embed=ingredients&_expand=category`
-      );
-      const data = await response.json();
-      setItemEdit(data);
+      dispatch(fetchItem(id));
       setOpen(true);
-      // fetchData();
     } catch (err) {
       console.log(err);
     }
@@ -123,11 +119,11 @@ export default function ItemsTable() {
                     />
                   </td>
                   <td className="py-3 px-4 text-sm font-medium">
-                    {item.category.name}
+                    {item.Category.name}
                   </td>
                   <td className="py-3 px-4 text-sm font-medium">
                     <ol>
-                      {item.ingredients.map((e, i) => {
+                      {item.Ingredients.map((e, i) => {
                         return (
                           <li key={e.id}>
                             {++i}. {e.name}
@@ -137,7 +133,7 @@ export default function ItemsTable() {
                     </ol>
                   </td>
                   <td className="py-3 px-4 text-sm font-medium">
-                    {item.user.username}
+                    {item.User.email}
                   </td>
                   <td className="py-3 px-4 text-sm font-medium">
                     <Link

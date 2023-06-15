@@ -32,6 +32,10 @@ class Controller {
         }, {
           model: Ingredient,
           attributes: { exclude: ['createdAt', 'updatedAt'] }
+        },
+        {
+          model: User,
+          attributes: ['username', 'email']
         }],
         order: [['updatedAt', 'DESC']]
       })
@@ -44,6 +48,16 @@ class Controller {
   static async findAllICategories(req, res, next) {
     try {
       const data = await Category.findAll()
+      res.status(200).json({ message: 'Success get data', data })
+    } catch (err) {
+      next(err)
+    }
+  }
+
+  static async findOneCategory(req, res, next) {
+    try {
+      const { id } = req.params
+      const data = await Category.findByPk(id)
       res.status(200).json({ message: 'Success get data', data })
     } catch (err) {
       next(err)

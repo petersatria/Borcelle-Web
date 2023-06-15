@@ -1,5 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { registerAdmin } from "../store/actions/usersAction";
 
 export default function RegisterAdmin() {
   const [user, setUser] = useState({
@@ -9,6 +11,7 @@ export default function RegisterAdmin() {
     phoneNumber: "",
     address: "",
   });
+  const dispatch = useDispatch();
   const handleOnChangeForm = (e) => {
     setUser({
       ...user,
@@ -19,11 +22,7 @@ export default function RegisterAdmin() {
   const handleSubmitForm = async (e) => {
     e.preventDefault();
     try {
-      await axios({
-        method: "POST",
-        url: "http://localhost:3000/users",
-        data: user,
-      });
+      dispatch(registerAdmin(user));
       handleResetForm(e);
     } catch (err) {
       console.log(err);

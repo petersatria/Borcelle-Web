@@ -19,8 +19,8 @@ export const fetchCategories = () => {
       const url = "http://localhost:3000/categories";
       const response = await fetch(url);
       if (!response.ok) throw new Error('ERR ~')
-      let result = await response.json();
-      dispatch(categoriesFetchSuccess(result))
+      let { data } = await response.json();
+      dispatch(categoriesFetchSuccess(data))
     } catch (err) {
       console.log(err);
     }
@@ -35,10 +35,13 @@ export const postCategories = (payload) => {
         method: 'POST',
         headers: {
           "Content-Type": "application/json",
+          "access_token": localStorage.access_token
         },
         body: JSON.stringify(payload)
       });
-      if (!response.ok) throw new Error('ERR ~')
+      let { message } = await response.json();
+      if (!response.ok) throw { message: message }
+      dispatch(fetchCategories())
     } catch (err) {
       console.log(err);
     }
@@ -49,23 +52,46 @@ export const deleteCategory = (id) => {
     try {
       const url = "http://localhost:3000/categories/" + id;
       const response = await fetch(url, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+          "access_token": localStorage.access_token
+        }
       });
       if (!response.ok) throw new Error('ERR ~')
+      dispatch(fetchCategories())
     } catch (err) {
       console.log(err);
     }
   }
 }
-
+export const updateCategories = (id, payload) => {
+  return async (dispatch) => {
+    try {
+      const url = "http://localhost:3000/categories/" + id;
+      const response = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          "Content-Type": "application/json",
+          "access_token": localStorage.access_token
+        },
+        body: JSON.stringify(payload)
+      });
+      let { message } = await response.json();
+      if (!response.ok) throw { message: message }
+      dispatch(fetchCategories())
+    } catch (err) {
+      console.log(err);
+    }
+  }
+}
 export const fetchCategory = (id) => {
   return async (dispatch) => {
     try {
       const url = "http://localhost:3000/categories/" + id;
       const response = await fetch(url);
       if (!response.ok) throw new Error('ERR ~')
-      let result = await response.json();
-      dispatch(categoryFetchSuccess(result))
+      let { data } = await response.json();
+      dispatch(categoryFetchSuccess(data))
     } catch (err) {
       console.log(err);
     }

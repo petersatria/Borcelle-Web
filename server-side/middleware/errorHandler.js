@@ -13,7 +13,7 @@ function errorHandler(err, req, res, next) {
       break;
     case 'IngredientsRequired':
       status = 400
-      message = 'Ingredients is required'
+      message = 'Minimum ingredients is 2'
       break;
     case 'FailedCreatedItem':
       status = 400

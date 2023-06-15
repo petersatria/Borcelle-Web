@@ -14,37 +14,32 @@ export default function CategoriesTable() {
   const [categoryEdit, setCategoryEdit] = useState();
 
   const dispatch = useDispatch();
-  const { categories, category } = useSelector((state) => {
-    // console.log(state.categories.category, "<<<<");
-    return state.categories;
-  });
+  const { categories, category } = useSelector((state) => state.categories);
 
   useEffect(() => {
     dispatch(fetchCategories());
   }, []);
 
+  useEffect(() => {
+    if (category) {
+      setCategoryEdit(category);
+    }
+  }, [category]);
+
   const handleDelete = async (id) => {
     try {
       dispatch(deleteCategory(id));
-      dispatch(fetchCategories());
     } catch (err) {
       console.log(err);
-    } finally {
-      dispatch(fetchCategories());
     }
   };
 
   const handleEdit = async (id) => {
     try {
-      // const response = await fetch("http://localhost:3000/categories/" + id);
-      // const data = await response.json();
       dispatch(fetchCategory(id));
-      setCategoryEdit(category); // telat
       setOpen(true);
     } catch (err) {
       console.log(err);
-    } finally {
-      setCategoryEdit(category);
     }
   };
 
