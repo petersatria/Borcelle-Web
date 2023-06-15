@@ -11,7 +11,7 @@ import {
 
 export default function CategoriesTable() {
   const [open, setOpen] = useState(false);
-  const [categoryEdit, setCategoryEdit] = useState({});
+  const [categoryEdit, setCategoryEdit] = useState();
 
   const dispatch = useDispatch();
   const { categories, category } = useSelector((state) => {
@@ -43,6 +43,8 @@ export default function CategoriesTable() {
       setOpen(true);
     } catch (err) {
       console.log(err);
+    } finally {
+      setCategoryEdit(category);
     }
   };
 

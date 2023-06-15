@@ -19,6 +19,7 @@ export default function ModalAddCategory({
   const dispatch = useDispatch();
 
   useEffect(() => {
+    console.log(categoryEdit, "ada ga");
     if (categoryEdit) {
       setCategory(categoryEdit.name);
       setIsEdit(true);
