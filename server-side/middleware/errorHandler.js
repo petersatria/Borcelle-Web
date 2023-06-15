@@ -11,6 +11,14 @@ function errorHandler(err, req, res, next) {
       status = 400
       message = 'Email / password is required'
       break;
+    case 'IngredientsRequired':
+      status = 400
+      message = 'Ingredients is required'
+      break;
+    case 'FailedCreatedItem':
+      status = 400
+      message = 'Failed to create item'
+      break;
     case 'Unauthorized':
     case 'JsonWebTokenError':
       status = 401

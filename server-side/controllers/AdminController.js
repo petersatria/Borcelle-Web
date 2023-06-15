@@ -38,20 +38,16 @@ class AdminController {
   }
   static async createItem(req, res, next) {
     try {
-      const data = await Item.createItem(req)
-      if (!data) throw { name: 'FailedCreateItem' }
+      const data = await Item.createItem(req, res, next)
+      if (!data) throw { name: 'FailedCreatedItem' }
       res.status(201).json({ message: 'Success create item', data: data.data, ingredients: data.createdIngredients })
     } catch (err) {
-      console.log(err);
       next(err)
     }
+
   }
   static async updateItem(req, res, next) {
-    try {
-
-    } catch (err) {
-
-    }
+    await Item.updateItem(req, res, next)
   }
   static async deleteItem(req, res, next) {
     try {

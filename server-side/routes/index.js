@@ -13,11 +13,11 @@ router
   .use(authentication)
   .post('/register', AdminController.registerAdmin)
   .post('/items', AdminController.createItem)
-  .put('/items', AdminController.updateItem)
-  .delete('/items', AdminController.deleteItem)
+  .put('/items/:id', AdminController.updateItem)
+  .delete('/items/:id', AdminController.deleteItem)
   .post('/categories', AdminController.createCategory)
-  .put('/categories', AdminController.updateCategory)
-  .delete('/categories', AdminController.deleteCategory)
+  .put('/categories/:id', AdminController.updateCategory)
+  .delete('/categories/:id', AdminController.deleteCategory)
   .use(errorHandler)
 
 module.exports = router

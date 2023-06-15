@@ -10,6 +10,10 @@ class Controller {
         }, {
           model: Ingredient,
           attributes: { exclude: ['createdAt', 'updatedAt'] }
+        },
+        {
+          model: User,
+          attributes: ['username', 'email']
         }],
         order: [['updatedAt', 'DESC']]
       })

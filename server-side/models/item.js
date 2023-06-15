@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       Item.hasMany(models.Ingredient, { foreignKey: 'itemId' })
     }
 
-    static async createItem(req) {
+    static async createItem(req, res, next) {
       const t = await sequelize.transaction();
 
       try {
@@ -25,7 +25,8 @@ module.exports = (sequelize, DataTypes) => {
         const data = await Item.create({
           name, description, price, imgUrl, authorId, categoryId, ingredients
         })
-        const ingredientsData = req.body.ingredients.map(e => {
+        if (!req.body.ingredients) throw { name: 'IngredientsRequired' }
+        const ingredientsData = ingredients.map(e => {
           return { name: e, itemId: data.id }
         })
         const createdIngredients = await sequelize.models.Ingredient.bulkCreate(ingredientsData, { transaction: t })
@@ -33,6 +34,37 @@ module.exports = (sequelize, DataTypes) => {
         return { data, createdIngredients }
       } catch (err) {
         await t.rollback();
+        next(err)
+      }
+    }
+
+    static async updateItem(req, res, next) {
+      const t = await sequelize.transaction();
+
+      try {
+        const { id: authorId } = req.user
+        const { id } = req.params
+        const { name, description, price, imgUrl, categoryId, ingredients } = req.body
+        await Item.update({
+          name, description, price, imgUrl, authorId, categoryId, ingredients
+        }, { where: { id } })
+        if (!req.body.ingredients) throw { name: 'IngredientsRequired' }
+
+        const ingredientsData = await Item.findAll({ include: [{ model: sequelize.models.Ingredient }], where: { id } })
+        let arr = []
+        ingredientsData[0].Ingredients.forEach((e, i) => {
+          let promise = sequelize.models.Ingredient.update({ name: ingredients[i] }, { where: { id: e.id } })
+          arr.push(promise)
+        });
+        Promise.all(arr)
+          .then(result => {
+            res.status(200).json({ message: 'Success update data' })
+          })
+          .catch(err => { throw err })
+        await t.commit();
+      } catch (err) {
+        await t.rollback();
+        next(err)
       }
     }
   }
