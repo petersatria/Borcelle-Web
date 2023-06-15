@@ -1,23 +1,42 @@
 import { NavLink } from "react-router-dom";
-
+import logo from "../assets/sidebar_logo.png";
+import { useEffect, useState } from "react";
+import {
+  RiHome4Line,
+  RiPriceTag3Line,
+  RiUserAddLine,
+  RiLogoutBoxLine,
+  RiUser3Fill,
+} from "react-icons/ri";
 export default function Sidebar() {
+  const [user, setUser] = useState();
+
+  useEffect(() => {
+    if (localStorage.user) {
+      const user = JSON.parse(localStorage.user);
+      setUser({ username: user.username, email: user.email });
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.clear();
+  };
+
   return (
     <div className="w-64 flex h-screen flex-col justify-between border-e bg-primary-yellow fixed">
       <div className="px-4 py-6">
-        <span className="grid h-10 place-content-center rounded-lg bg-gray-100 text-xs text-gray-600">
-          Logo
-        </span>
-
+        <img src={logo} alt="logo" />
         <ul className="mt-6 space-y-1">
           <li>
             <NavLink
               to={`/`}
               className={({ isActive, isPending }) =>
                 `${isActive ? "bg-yellow-600" : isPending ? "" : ""}
-              cursor-pointer block rounded-lg px-4 py-2 text-sm font-medium text-white hover:bg-yellow-600 tracking-wide
+              cursor-pointer flex rounded-lg px-4 py-2 text-sm font-medium text-white hover:bg-yellow-600 tracking-wide
               `
               }
             >
+              <RiHome4Line className="self-center text-xl mr-4" />
               Dashboard
             </NavLink>
           </li>
@@ -27,10 +46,11 @@ export default function Sidebar() {
               to={`/categories`}
               className={({ isActive, isPending }) =>
                 `${isActive ? "bg-yellow-600" : isPending ? "" : ""}
-              cursor-pointer block rounded-lg px-4 py-2 text-sm font-medium text-white hover:bg-yellow-600 tracking-wide
+              cursor-pointer flex rounded-lg px-4 py-2 text-sm font-medium text-white hover:bg-yellow-600 tracking-wide
               `
               }
             >
+              <RiPriceTag3Line className="self-center text-xl mr-4" />
               Categories
             </NavLink>
           </li>
@@ -39,11 +59,26 @@ export default function Sidebar() {
               to={`/register-admin`}
               className={({ isActive, isPending }) =>
                 `${isActive ? "bg-yellow-600" : isPending ? "" : ""}
-              cursor-pointer block rounded-lg px-4 py-2 text-sm font-medium text-white hover:bg-yellow-600 tracking-wide
+              cursor-pointer flex rounded-lg px-4 py-2 text-sm font-medium text-white hover:bg-yellow-600 tracking-wide
               `
               }
             >
+              <RiUserAddLine className="self-center text-xl mr-4" />
               Register Admin
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to={`/login`}
+              onClick={handleLogout}
+              className={({ isActive, isPending }) =>
+                `${isActive ? "bg-yellow-600" : isPending ? "" : ""}
+              cursor-pointer flex rounded-lg px-4 py-2 text-sm font-medium text-white hover:bg-yellow-600 tracking-wide
+              `
+              }
+            >
+              <RiLogoutBoxLine className="self-center text-xl mr-4" />
+              Sign Out
             </NavLink>
           </li>
         </ul>
@@ -54,17 +89,12 @@ export default function Sidebar() {
           href="#"
           className="flex items-center gap-2 bg-white p-4 hover:bg-gray-50"
         >
-          <img
-            alt="Man"
-            src="https://images.unsplash.com/photo-1600486913747-55e5470d6f40?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-            className="h-10 w-10 rounded-full object-cover"
-          />
-
+          <RiUser3Fill className="text-3xl text-primary-yellow" />
           <div>
             <p className="text-xs">
-              <strong className="block font-medium">Username</strong>
+              <strong className="block font-medium">{user?.username}</strong>
 
-              <span> email </span>
+              <span>{user?.email} </span>
             </p>
           </div>
         </a>

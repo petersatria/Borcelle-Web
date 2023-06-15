@@ -8,6 +8,7 @@ import {
   fetchCategories,
   fetchCategory,
 } from "../store/actions/categoriesAction";
+import { RiAddLine } from "react-icons/ri";
 
 export default function CategoriesTable() {
   const [open, setOpen] = useState(false);
@@ -51,8 +52,9 @@ export default function CategoriesTable() {
             <h1 className="text-xl font-semibold">Categories</h1>
             <button
               onClick={() => setOpen(true)}
-              className="mb-5 px-6 py-2 rounded-lg bg-primary-yellow text-white hover:bg-yellow-600"
+              className="mb-5 p-2 rounded-lg bg-primary-yellow text-white hover:bg-yellow-600 flex"
             >
+              <RiAddLine className="self-center text-xl mr-2" />
               Add Category
             </button>
           </div>

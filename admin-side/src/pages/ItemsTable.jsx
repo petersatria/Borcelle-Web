@@ -7,7 +7,7 @@ import {
   fetchItem,
   fetchItems,
 } from "../store/actions/itemsAction";
-
+import { RiAddLine } from "react-icons/ri";
 export default function ItemsTable() {
   const [open, setOpen] = useState(false);
   const [itemEdit, setItemEdit] = useState();
@@ -50,8 +50,9 @@ export default function ItemsTable() {
             <h1 className="text-xl font-semibold">Items</h1>
             <button
               onClick={() => setOpen(true)}
-              className="mb-5 px-6 py-2 rounded-lg bg-primary-yellow text-white hover:bg-yellow-600"
+              className="mb-5 p-2 rounded-lg bg-primary-yellow text-white hover:bg-yellow-600 flex"
             >
+              <RiAddLine className="self-center text-xl mr-2" />
               Add Item
             </button>
           </div>
