@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../store/actions/categoriesAction";
 import { postItem, updateItem } from "../store/actions/itemsAction";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function ModalAddItem({ open, onClose, itemEdit }) {
   const [input, setInput] = useState([]);
@@ -10,16 +11,16 @@ export default function ModalAddItem({ open, onClose, itemEdit }) {
     description: "",
     price: "",
     imgUrl: "",
-    userId: 1,
     categoryId: "",
-    createdAt: new Date(),
-    updatedAt: new Date(),
   });
   const [ingredients, setIngredients] = useState("");
+  const [error, setError] = useState("");
   const dispatch = useDispatch();
-  const { categories } = useSelector((state) => {
-    return state.categories;
+  const { categories: tempCategories, items } = useSelector((state) => {
+    return state;
   });
+  const categories = tempCategories.categories;
+  // const err = items.err?.message;
   const [isEdit, setIsEdit] = useState(false);
 
   useEffect(() => {
@@ -66,13 +67,11 @@ export default function ModalAddItem({ open, onClose, itemEdit }) {
   const handleSubmitForm = async (e) => {
     try {
       e.preventDefault();
-      const arr = [];
       if (isEdit) {
         const payload = {
           ...item,
           ingredients: [ingredients, ...input],
         };
-        console.log(payload);
         dispatch(updateItem(itemEdit.id, payload));
       } else {
         const payload = {
@@ -80,9 +79,19 @@ export default function ModalAddItem({ open, onClose, itemEdit }) {
           ingredients: [ingredients, ...input],
         };
         dispatch(postItem(payload));
+        if (error) throw error;
+        setItem({
+          name: "",
+          description: "",
+          price: "",
+          imgUrl: "",
+          categoryId: "",
+        });
+        setIngredients("");
+        setInput([]);
       }
     } catch (err) {
-      console.log(err, "yakah");
+      console.log(err, "log");
     }
   };
 
@@ -93,16 +102,11 @@ export default function ModalAddItem({ open, onClose, itemEdit }) {
       description: "",
       price: "",
       imgUrl: "",
-      userId: 0,
       categoryId: "",
-      createdAt: new Date(),
-      updatedAt: new Date(),
     });
     setInput([]);
     setIngredients("");
     setIsEdit(false);
-
-    console.log(input);
   };
 
   return (
@@ -226,7 +230,6 @@ export default function ModalAddItem({ open, onClose, itemEdit }) {
             )}
             <button
               onClick={(e) => {
-                onClose();
                 handleSubmitForm(e);
               }}
               className="px-3 py-2 rounded-lg bg-slate-900 text-white hover:bg-slate-700"
@@ -236,6 +239,7 @@ export default function ModalAddItem({ open, onClose, itemEdit }) {
           </div>
         </form>
       </div>
+      <Toaster position="bottom-right" />
     </div>
   );
 }

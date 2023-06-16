@@ -1,4 +1,4 @@
-import { FETCH_ITEM, FETCH_ITEMS } from "./actionType"
+import { ERROR_ITEM, FETCH_ITEM, FETCH_ITEMS } from "./actionType"
 
 export const itemsFetchSuccess = (payload) => {
   return {
@@ -10,6 +10,13 @@ export const itemFetchSuccess = (payload) => {
   return {
     type: FETCH_ITEM,
     payload
+  }
+}
+
+export const itemErrorMsg = (err) => {
+  return {
+    type: ERROR_ITEM,
+    err
   }
 }
 
@@ -44,6 +51,7 @@ export const postItem = (payload) => {
       dispatch(fetchItems())
     } catch (err) {
       console.log(err);
+      dispatch(itemErrorMsg(err))
     }
   }
 }

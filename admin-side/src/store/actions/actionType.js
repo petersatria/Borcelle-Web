@@ -1,5 +1,6 @@
 export const FETCH_ITEMS = 'items/fetch'
 export const FETCH_ITEM = 'item/fetch'
+export const ERROR_ITEM = 'item/error'
 export const FETCH_CATEGORIES = 'categories/fetch'
 export const FETCH_CATEGORY = 'category/fetch'
 export const LOGIN_ADMIN = 'users/login'

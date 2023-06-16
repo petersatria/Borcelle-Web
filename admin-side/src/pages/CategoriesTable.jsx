@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import ModalAddCategory from "../components/ModalAddCategory";
-import useFetch from "../hooks/useFetch";
-import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   deleteCategory,
@@ -9,6 +7,7 @@ import {
   fetchCategory,
 } from "../store/actions/categoriesAction";
 import { RiAddLine } from "react-icons/ri";
+import RowTable from "../components/RowTable";
 
 export default function CategoriesTable() {
   const [open, setOpen] = useState(false);
@@ -62,7 +61,6 @@ export default function CategoriesTable() {
         <ModalAddCategory
           open={open}
           onClose={() => setOpen(false)}
-          // fetchData={fetchData}
           categoryEdit={categoryEdit}
         />
         <table className="px-4 min-w-full rounded-md border border-gray-200 overflow-hidden">
@@ -83,24 +81,13 @@ export default function CategoriesTable() {
             {categories &&
               categories.map((e, i) => {
                 return (
-                  <tr key={e.id}>
-                    <td className="py-3 px-4 text-sm font-medium">{++i}</td>
-                    <td className="py-3 px-4 text-sm font-medium">{e.name}</td>
-                    <td className="py-3 px-4 text-sm font-medium">
-                      <Link
-                        onClick={() => handleEdit(e.id)}
-                        className="cursor-pointer text-yellow-600 mr-4"
-                      >
-                        Edit
-                      </Link>
-                      <Link
-                        onClick={() => handleDelete(e.id)}
-                        className="cursor-pointer text-red-500"
-                      >
-                        Delete
-                      </Link>
-                    </td>
-                  </tr>
+                  <RowTable
+                    key={e.id}
+                    category={e}
+                    index={i}
+                    handleEdit={handleEdit}
+                    handleDelete={handleDelete}
+                  />
                 );
               })}
           </tbody>
