@@ -14,13 +14,14 @@ export default function ModalAddItem({ open, onClose, itemEdit }) {
     categoryId: "",
   });
   const [ingredients, setIngredients] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState();
   const dispatch = useDispatch();
-  const { categories: tempCategories, items } = useSelector((state) => {
-    return state;
+  const { categories } = useSelector((state) => {
+    return state.categories;
   });
-  const categories = tempCategories.categories;
-  // const err = items.err?.message;
+  const { err } = useSelector((state) => {
+    return state.items;
+  });
   const [isEdit, setIsEdit] = useState(false);
 
   useEffect(() => {
@@ -33,6 +34,16 @@ export default function ModalAddItem({ open, onClose, itemEdit }) {
       setIsEdit(true);
     }
   }, [itemEdit]);
+
+  useEffect(() => {
+    if (err) {
+      // setError(err);
+      toast.error(err.message);
+    }
+    // if (!err) {
+    // setError(null);
+    // }
+  }, [err]);
 
   const handleAddInput = (e) => {
     e.preventDefault();
@@ -67,19 +78,15 @@ export default function ModalAddItem({ open, onClose, itemEdit }) {
   const handleSubmitForm = async (e) => {
     try {
       e.preventDefault();
+      const payload = {
+        ...item,
+        ingredients: [ingredients, ...input],
+      };
       if (isEdit) {
-        const payload = {
-          ...item,
-          ingredients: [ingredients, ...input],
-        };
         dispatch(updateItem(itemEdit.id, payload));
       } else {
-        const payload = {
-          ...item,
-          ingredients: [ingredients, ...input],
-        };
         dispatch(postItem(payload));
-        if (error) throw error;
+        if (err) return;
         setItem({
           name: "",
           description: "",
@@ -89,9 +96,10 @@ export default function ModalAddItem({ open, onClose, itemEdit }) {
         });
         setIngredients("");
         setInput([]);
+        onClose();
       }
     } catch (err) {
-      console.log(err, "log");
+      console.log(err);
     }
   };
 
@@ -132,7 +140,7 @@ export default function ModalAddItem({ open, onClose, itemEdit }) {
           </button>
         </div>
 
-        <form className="flex flex-col mt-5">
+        <form className="flex flex-col mt-5" onSubmit={handleSubmitForm}>
           <label htmlFor="name">Name</label>
           <input
             type="text"
@@ -228,12 +236,7 @@ export default function ModalAddItem({ open, onClose, itemEdit }) {
                 Add Ingredients
               </button>
             )}
-            <button
-              onClick={(e) => {
-                handleSubmitForm(e);
-              }}
-              className="px-3 py-2 rounded-lg bg-slate-900 text-white hover:bg-slate-700"
-            >
+            <button className="px-3 py-2 rounded-lg bg-slate-900 text-white hover:bg-slate-700">
               Submit
             </button>
           </div>

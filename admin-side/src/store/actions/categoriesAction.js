@@ -1,4 +1,4 @@
-import { FETCH_CATEGORIES, FETCH_CATEGORY } from "./actionType"
+import { FETCH_CATEGORIES, FETCH_CATEGORY, LOADING_FETCH_CATEGORIES } from "./actionType"
 
 export const categoriesFetchSuccess = (payload) => {
   return {
@@ -13,6 +13,13 @@ export const categoryFetchSuccess = (payload) => {
   }
 }
 
+export const isLoadingCategories = (boolean) => {
+  return {
+    type: LOADING_FETCH_CATEGORIES,
+    payload: boolean
+  }
+}
+
 export const fetchCategories = () => {
   return async (dispatch) => {
     try {
@@ -23,6 +30,8 @@ export const fetchCategories = () => {
       dispatch(categoriesFetchSuccess(data))
     } catch (err) {
       console.log(err);
+    } finally {
+      dispatch(isLoadingCategories(false))
     }
   }
 }

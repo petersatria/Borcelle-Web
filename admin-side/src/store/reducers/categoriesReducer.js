@@ -1,8 +1,9 @@
-import { FETCH_CATEGORIES, FETCH_CATEGORY } from "../actions/actionType"
+import { FETCH_CATEGORIES, FETCH_CATEGORY, LOADING_FETCH_CATEGORIES } from "../actions/actionType"
 
 const initialState = {
   data: [],
-  category: null
+  category: null,
+  isLoading: true
 }
 
 function categoriesReducer(state = initialState, action) {
@@ -16,6 +17,11 @@ function categoriesReducer(state = initialState, action) {
       return {
         ...state,
         category: action.payload
+      }
+    case LOADING_FETCH_CATEGORIES:
+      return {
+        ...state,
+        isLoading: action.payload
       }
     default:
       return state

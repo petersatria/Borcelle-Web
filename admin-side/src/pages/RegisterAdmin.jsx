@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { registerAdmin } from "../store/actions/usersAction";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function RegisterAdmin() {
   const [user, setUser] = useState({
@@ -12,6 +13,19 @@ export default function RegisterAdmin() {
     address: "",
   });
   const dispatch = useDispatch();
+  const { err } = useSelector((state) => {
+    return state.users;
+  });
+  const [error, setError] = useState();
+
+  useEffect(() => {
+    // console.log(err);
+    if (err) {
+      setError(err);
+      // toast.error(err.message);
+    }
+  }, [err]);
+
   const handleOnChangeForm = (e) => {
     setUser({
       ...user,
@@ -23,9 +37,11 @@ export default function RegisterAdmin() {
     e.preventDefault();
     try {
       dispatch(registerAdmin(user));
+      if (error) throw err;
       handleResetForm(e);
     } catch (err) {
-      console.log(err);
+      toast.error(err.message);
+      // console.log(err);
     }
   };
   const handleResetForm = (e) => {
@@ -109,6 +125,7 @@ export default function RegisterAdmin() {
           </div>
         </form>
       </div>
+      <Toaster position="bottom-right" />
     </div>
   );
 }

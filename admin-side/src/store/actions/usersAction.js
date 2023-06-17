@@ -1,11 +1,16 @@
-import { LOGIN_ADMIN } from "./actionType";
+import { ERROR_USERS, LOGIN_ADMIN } from "./actionType";
 
 export const loginSuccess = (payload) => {
   return {
-
     type: LOGIN_ADMIN,
     payload
+  }
+}
 
+export const itemErrorMsg = (err) => {
+  return {
+    type: ERROR_USERS,
+    err
   }
 }
 
@@ -22,9 +27,9 @@ export const registerAdmin = (payload) => {
         body: JSON.stringify(payload)
       });
       let { message } = await response.json();
-      if (!response.ok) throw { message: message }
+      if (!response.ok) throw { message }
     } catch (err) {
-      console.log(err);
+      dispatch(itemErrorMsg(err))
     }
   }
 }

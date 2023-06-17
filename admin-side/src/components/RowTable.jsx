@@ -8,7 +8,11 @@ export default function RowTable({
   item,
 }) {
   return category ? (
-    <tr>
+    <tr
+      className={`${
+        index % 2 === 0 ? "bg-gray-50" : "bg-gray-100"
+      } whitespace-nowrap`}
+    >
       <td className="py-3 px-4 text-sm font-medium">{++index}</td>
       <td className="py-3 px-4 text-sm font-medium">{category.name}</td>
       <td className="py-3 px-4 text-sm font-medium">
@@ -28,7 +32,6 @@ export default function RowTable({
     </tr>
   ) : (
     <tr
-      key={item.id}
       className={`${
         index % 2 === 0 ? "bg-gray-50" : "bg-gray-100"
       } whitespace-nowrap`}

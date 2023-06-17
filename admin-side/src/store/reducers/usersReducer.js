@@ -1,7 +1,8 @@
-import { LOGIN_ADMIN } from "../actions/actionType"
+import { ERROR_USERS, LOGIN_ADMIN } from "../actions/actionType"
 
 const initialState = {
-  data: null
+  data: null,
+  err: null
 }
 
 function usersReducer(state = initialState, action) {
@@ -10,6 +11,11 @@ function usersReducer(state = initialState, action) {
       return {
         ...state,
         data: action.payload
+      }
+    case ERROR_USERS:
+      return {
+        ...state,
+        err: action.err
       }
     default:
       return state

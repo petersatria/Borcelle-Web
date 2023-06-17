@@ -1,10 +1,10 @@
-import { ERROR_ITEM, FETCH_ITEM, FETCH_ITEMS } from "../actions/actionType"
+import { ERROR_ITEM, FETCH_ITEM, FETCH_ITEMS, LOADING_FETCH_ITEMS } from "../actions/actionType"
 
 const initialState = {
   items: [],
   item: null,
-  err: null
-
+  err: null,
+  isLoading: true
 }
 
 function itemsReducer(state = initialState, action) {
@@ -23,6 +23,11 @@ function itemsReducer(state = initialState, action) {
       return {
         ...state,
         err: action.err
+      }
+    case LOADING_FETCH_ITEMS:
+      return {
+        ...state,
+        isLoading: action.payload
       }
     default:
       return state

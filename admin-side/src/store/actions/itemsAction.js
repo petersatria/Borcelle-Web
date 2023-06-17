@@ -1,4 +1,4 @@
-import { ERROR_ITEM, FETCH_ITEM, FETCH_ITEMS } from "./actionType"
+import { ERROR_ITEM, FETCH_ITEM, FETCH_ITEMS, LOADING_FETCH_ITEMS } from "./actionType"
 
 export const itemsFetchSuccess = (payload) => {
   return {
@@ -20,6 +20,13 @@ export const itemErrorMsg = (err) => {
   }
 }
 
+export const isLoadingItems = (boolean) => {
+  return {
+    type: LOADING_FETCH_ITEMS,
+    payload: boolean
+  }
+}
+
 export const fetchItems = () => {
   return async (dispatch) => {
     try {
@@ -30,6 +37,8 @@ export const fetchItems = () => {
       dispatch(itemsFetchSuccess(data))
     } catch (err) {
       console.log(err);
+    } finally {
+      dispatch(isLoadingItems(false))
     }
   }
 }
@@ -47,10 +56,10 @@ export const postItem = (payload) => {
         body: JSON.stringify(payload)
       });
       let { message } = await response.json();
-      if (!response.ok) throw { message: message }
+      if (!response.ok) throw { message }
       dispatch(fetchItems())
     } catch (err) {
-      console.log(err);
+      console.log('gamasuk');
       dispatch(itemErrorMsg(err))
     }
   }
