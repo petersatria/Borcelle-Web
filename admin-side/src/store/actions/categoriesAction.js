@@ -23,6 +23,7 @@ export const isLoadingCategories = (boolean) => {
 export const fetchCategories = () => {
   return async (dispatch) => {
     try {
+      dispatch(isLoadingCategories(true))
       const url = "http://localhost:3000/categories";
       const response = await fetch(url);
       if (!response.ok) throw new Error('ERR ~')

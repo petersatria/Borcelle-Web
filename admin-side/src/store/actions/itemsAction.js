@@ -31,6 +31,7 @@ export const isLoadingItems = (boolean) => {
 export const fetchItems = () => {
   return async (dispatch) => {
     try {
+      dispatch(isLoadingItems(true))
       const url = "http://localhost:3000/items";
       const response = await fetch(url);
       if (!response.ok) throw new Error('ERR ~')
