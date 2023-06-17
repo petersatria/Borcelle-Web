@@ -1,3 +1,4 @@
+import { toast } from "react-hot-toast";
 import { ERROR_USERS, LOGIN_ADMIN } from "./actionType";
 
 export const loginSuccess = (payload) => {
@@ -29,6 +30,7 @@ export const registerAdmin = (payload) => {
       let { message } = await response.json();
       if (!response.ok) throw { message }
     } catch (err) {
+      toast.error(err.message)
       dispatch(itemErrorMsg(err))
     }
   }
@@ -52,7 +54,8 @@ export const loginAdmin = (payload) => {
       localStorage.access_token = data.access_token
       localStorage.user = JSON.stringify({ username: data.username, email: data.email })
     } catch (err) {
-      console.log(err);
+      toast.error(err.message)
+
     }
   }
 }

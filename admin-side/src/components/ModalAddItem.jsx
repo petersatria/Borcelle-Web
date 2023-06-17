@@ -37,12 +37,12 @@ export default function ModalAddItem({ open, onClose, itemEdit }) {
 
   useEffect(() => {
     if (err) {
-      // setError(err);
-      toast.error(err.message);
+      setError(err);
+      // toast.error(err.message);
     }
-    // if (!err) {
-    // setError(null);
-    // }
+    if (!err) {
+      setError(null);
+    }
   }, [err]);
 
   const handleAddInput = (e) => {
@@ -86,7 +86,7 @@ export default function ModalAddItem({ open, onClose, itemEdit }) {
         dispatch(updateItem(itemEdit.id, payload));
       } else {
         dispatch(postItem(payload));
-        if (err) return;
+        if (error) return;
         setItem({
           name: "",
           description: "",

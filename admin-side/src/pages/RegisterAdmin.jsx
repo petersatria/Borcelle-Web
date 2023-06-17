@@ -40,7 +40,7 @@ export default function RegisterAdmin() {
       if (error) throw err;
       handleResetForm(e);
     } catch (err) {
-      toast.error(err.message);
+      // toast.error(err.message);
       // console.log(err);
     }
   };

@@ -1,3 +1,4 @@
+import { toast } from "react-hot-toast"
 import { ERROR_ITEM, FETCH_ITEM, FETCH_ITEMS, LOADING_FETCH_ITEMS } from "./actionType"
 
 export const itemsFetchSuccess = (payload) => {
@@ -59,7 +60,7 @@ export const postItem = (payload) => {
       if (!response.ok) throw { message }
       dispatch(fetchItems())
     } catch (err) {
-      console.log('gamasuk');
+      toast.error(err.message)
       dispatch(itemErrorMsg(err))
     }
   }

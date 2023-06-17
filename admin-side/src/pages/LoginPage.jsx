@@ -3,6 +3,7 @@ import logo from "../assets/logo.png";
 import { useEffect, useState } from "react";
 import { loginAdmin } from "../store/actions/usersAction";
 import { useNavigate } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
 export default function LoginPage() {
   const [user, setUser] = useState({
@@ -71,7 +72,7 @@ export default function LoginPage() {
           </button>
         </form>
       </div>
-      <form></form>
+      <Toaster position="bottom-right" />
     </section>
   );
 }
