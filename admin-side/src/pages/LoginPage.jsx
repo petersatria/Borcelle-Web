@@ -30,6 +30,7 @@ export default function LoginPage() {
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(loginAdmin(user));
+    if (!user.email || !user.password) return;
     setUser({
       email: "",
       password: "",

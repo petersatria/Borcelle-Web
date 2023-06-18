@@ -5,7 +5,7 @@ import { postItem, updateItem } from "../store/actions/itemsAction";
 import toast, { Toaster } from "react-hot-toast";
 
 export default function ModalAddItem({ open, onClose, itemEdit }) {
-  const [input, setInput] = useState([]);
+  const [input, setInput] = useState([""]);
   const [item, setItem] = useState({
     name: "",
     description: "",
@@ -14,14 +14,11 @@ export default function ModalAddItem({ open, onClose, itemEdit }) {
     categoryId: "",
   });
   const [ingredients, setIngredients] = useState("");
-  const [error, setError] = useState();
   const dispatch = useDispatch();
   const { categories } = useSelector((state) => {
     return state.categories;
   });
-  const { err } = useSelector((state) => {
-    return state.items;
-  });
+
   const [isEdit, setIsEdit] = useState(false);
 
   useEffect(() => {
@@ -35,19 +32,9 @@ export default function ModalAddItem({ open, onClose, itemEdit }) {
     }
   }, [itemEdit]);
 
-  useEffect(() => {
-    if (err) {
-      setError(err);
-      // toast.error(err.message);
-    }
-    if (!err) {
-      setError(null);
-    }
-  }, [err]);
-
   const handleAddInput = (e) => {
     e.preventDefault();
-    const newInput = [...input, []];
+    const newInput = [...input, ""];
     setInput(newInput);
   };
 
@@ -75,32 +62,40 @@ export default function ModalAddItem({ open, onClose, itemEdit }) {
     });
   };
 
-  const handleSubmitForm = async (e) => {
-    try {
-      e.preventDefault();
-      const payload = {
-        ...item,
-        ingredients: [ingredients, ...input],
-      };
-      if (isEdit) {
-        dispatch(updateItem(itemEdit.id, payload));
-      } else {
-        dispatch(postItem(payload));
-        if (error) return;
-        setItem({
-          name: "",
-          description: "",
-          price: "",
-          imgUrl: "",
-          categoryId: "",
-        });
-        setIngredients("");
-        setInput([]);
-        onClose();
-      }
-    } catch (err) {
-      console.log(err);
+  const handleSubmitForm = (e) => {
+    e.preventDefault();
+    const payload = {
+      ...item,
+      ingredients: [ingredients, ...input],
+    };
+    if (isEdit) {
+      dispatch(updateItem(itemEdit.id, payload));
+    } else {
+      dispatch(postItem(payload));
     }
+    if (
+      !item.name ||
+      !item.description ||
+      !item.price ||
+      !item.categoryId ||
+      !item.imgUrl ||
+      !ingredients ||
+      input.length == 0
+    )
+      return;
+    input.forEach((e) => {
+      if (!e) throw "Ingredients is required";
+    });
+    setItem({
+      name: "",
+      description: "",
+      price: "",
+      imgUrl: "",
+      categoryId: "",
+    });
+    setIngredients("");
+    setInput([]);
+    onClose();
   };
 
   const handleCloseModal = () => {
@@ -112,7 +107,7 @@ export default function ModalAddItem({ open, onClose, itemEdit }) {
       imgUrl: "",
       categoryId: "",
     });
-    setInput([]);
+    setInput([""]);
     setIngredients("");
     setIsEdit(false);
   };

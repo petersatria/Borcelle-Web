@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { registerAdmin } from "../store/actions/usersAction";
 import toast, { Toaster } from "react-hot-toast";
@@ -13,18 +12,6 @@ export default function RegisterAdmin() {
     address: "",
   });
   const dispatch = useDispatch();
-  const { err } = useSelector((state) => {
-    return state.users;
-  });
-  const [error, setError] = useState();
-
-  useEffect(() => {
-    // console.log(err);
-    if (err) {
-      setError(err);
-      // toast.error(err.message);
-    }
-  }, [err]);
 
   const handleOnChangeForm = (e) => {
     setUser({
@@ -35,14 +22,11 @@ export default function RegisterAdmin() {
 
   const handleSubmitForm = async (e) => {
     e.preventDefault();
-    try {
-      dispatch(registerAdmin(user));
-      if (error) throw err;
-      handleResetForm(e);
-    } catch (err) {
-      // toast.error(err.message);
-      // console.log(err);
+    dispatch(registerAdmin(user));
+    if (!user.email || !user.password) {
+      return;
     }
+    handleResetForm(e);
   };
   const handleResetForm = (e) => {
     e.preventDefault();

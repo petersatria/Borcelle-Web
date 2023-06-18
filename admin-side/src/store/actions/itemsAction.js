@@ -34,11 +34,11 @@ export const fetchItems = () => {
       dispatch(isLoadingItems(true))
       const url = "http://localhost:3000/items";
       const response = await fetch(url);
-      if (!response.ok) throw new Error('ERR ~')
-      let { data } = await response.json();
+      let { data, message } = await response.json();
+      if (!response.ok) throw message
       dispatch(itemsFetchSuccess(data))
     } catch (err) {
-      console.log(err);
+      toast.error(err)
     } finally {
       dispatch(isLoadingItems(false))
     }
@@ -58,10 +58,10 @@ export const postItem = (payload) => {
         body: JSON.stringify(payload)
       });
       let { message } = await response.json();
-      if (!response.ok) throw { message }
+      if (!response.ok) throw message
       dispatch(fetchItems())
     } catch (err) {
-      toast.error(err.message)
+      toast.error(err)
       dispatch(itemErrorMsg(err))
     }
   }
@@ -76,10 +76,11 @@ export const deleteItem = (id) => {
           "access_token": localStorage.access_token
         }
       });
-      if (!response.ok) throw new Error('ERR ~')
+      let { message } = await response.json();
+      if (!response.ok) throw message
       dispatch(fetchItems())
     } catch (err) {
-      console.log(err);
+      toast.error(err)
     }
   }
 }
@@ -96,10 +97,10 @@ export const updateItem = (id, payload) => {
         body: JSON.stringify(payload)
       });
       let { message } = await response.json();
-      if (!response.ok) throw { message: message }
+      if (!response.ok) throw message
       dispatch(fetchItems())
     } catch (err) {
-      console.log(err);
+      toast.error(err)
     }
   }
 }
@@ -108,11 +109,11 @@ export const fetchItem = (id) => {
     try {
       const url = "http://localhost:3000/items/" + id;
       const response = await fetch(url);
-      if (!response.ok) throw new Error('ERR ~')
-      let { data } = await response.json();
+      let { data, message } = await response.json();
+      if (!response.ok) throw message
       dispatch(itemFetchSuccess(data))
     } catch (err) {
-      console.log(err);
+      toast.error(err)
     }
   }
 }

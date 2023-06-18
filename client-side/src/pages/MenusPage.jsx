@@ -1,15 +1,26 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Card from "../components/Card";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchItems } from "../store/actionCreator";
+import {
+  fetchCategories,
+  fetchItems,
+  filterItem,
+} from "../store/actionCreator";
 import LoadingSpinner from "../components/LoadingSpinner";
 export default function MenusPage() {
   const dispatch = useDispatch();
-  const { items, isLoading } = useSelector((state) => state);
+  const { items, isLoading, categories, filteredItems } = useSelector(
+    (state) => state
+  );
 
   useEffect(() => {
     dispatch(fetchItems());
+    dispatch(fetchCategories());
   }, []);
+
+  const handleClick = (id) => {
+    dispatch(filterItem(id, items));
+  };
 
   return (
     <div
@@ -35,8 +46,27 @@ export default function MenusPage() {
             />
           </div>
           <div className="flex flex-wrap justify-center mt-10">
-            {items &&
-              items.map((e) => {
+            <button
+              onClick={() => handleClick()}
+              className="py-2 px-4 bg-[rgba(210,165,86,0.15)] mr-2  hover:bg-primary-yellow transition ease-in-out delay-150"
+            >
+              All
+            </button>
+            {categories &&
+              categories.map((e) => (
+                <button
+                  key={e.id}
+                  className="py-2 px-4 bg-[rgba(210,165,86,0.15)] mr-2  hover:bg-primary-yellow"
+                  value={e.id}
+                  onClick={() => handleClick(e.id)}
+                >
+                  {e.name}
+                </button>
+              ))}
+          </div>
+          <div className="flex flex-wrap justify-center mt-10">
+            {filteredItems &&
+              filteredItems.map((e) => {
                 return <Card key={e.id} item={e} />;
               })}
           </div>

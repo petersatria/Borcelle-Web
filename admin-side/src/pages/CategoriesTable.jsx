@@ -10,6 +10,7 @@ import { RiAddLine } from "react-icons/ri";
 import RowTable from "../components/RowTable";
 import TableHead from "../components/TableHead";
 import LoadingSpinner from "../components/LoadingSpinner";
+import { Toaster } from "react-hot-toast";
 
 export default function CategoriesTable() {
   const [open, setOpen] = useState(false);
@@ -31,20 +32,12 @@ export default function CategoriesTable() {
   }, [category]);
 
   const handleDelete = async (id) => {
-    try {
-      dispatch(deleteCategory(id));
-    } catch (err) {
-      console.log(err);
-    }
+    dispatch(deleteCategory(id));
   };
 
   const handleEdit = async (id) => {
-    try {
-      dispatch(fetchCategory(id));
-      setOpen(true);
-    } catch (err) {
-      console.log(err);
-    }
+    dispatch(fetchCategory(id));
+    setOpen(true);
   };
 
   return (
@@ -100,6 +93,7 @@ export default function CategoriesTable() {
             </table>
           </>
         )}
+        <Toaster position="bottom-right" />
       </div>
     </div>
   );

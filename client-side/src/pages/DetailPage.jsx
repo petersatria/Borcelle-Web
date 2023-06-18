@@ -39,6 +39,7 @@ export default function DetailPage() {
               </h2>
               <p className="tracking-wider mt-5">IDR {item?.price}</p>
               <p className="tracking-wider mt-2">{item?.description}</p>
+              <p className="tracking-wider mt-5">Ingredients</p>
               <ol className="mt-2">
                 {item &&
                   item?.Ingredients.map((e, i) => (

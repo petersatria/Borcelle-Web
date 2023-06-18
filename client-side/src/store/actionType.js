@@ -1,3 +1,5 @@
 export const FETCH_ITEMS = 'items/fetch'
 export const FETCH_ITEM = 'item/fetch'
+export const FILTER_ITEM = 'item/filter'
+export const FETCH_CATEGORIES = 'categories/fetch'
 export const LOADING_FETCH = 'fetch/loading'

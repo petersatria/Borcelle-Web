@@ -15,6 +15,10 @@ function errorHandler(err, req, res, next) {
       status = 400
       message = 'Minimum ingredients is 2'
       break;
+    case 'IngredientsNotEmpty':
+      status = 400
+      message = 'Ingredients is required'
+      break;
     case 'FailedCreatedItem':
       status = 400
       message = 'Failed to create item'

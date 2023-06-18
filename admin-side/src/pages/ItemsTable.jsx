@@ -11,6 +11,7 @@ import { RiAddLine } from "react-icons/ri";
 import RowTable from "../components/RowTable";
 import TableHead from "../components/TableHead";
 import LoadingSpinner from "../components/LoadingSpinner";
+import { Toaster } from "react-hot-toast";
 export default function ItemsTable() {
   const [open, setOpen] = useState(false);
   const [itemEdit, setItemEdit] = useState();
@@ -29,20 +30,12 @@ export default function ItemsTable() {
   }, [item]);
 
   const handleDelete = async (id) => {
-    try {
-      dispatch(deleteItem(id));
-    } catch (err) {
-      console.log(err);
-    }
+    dispatch(deleteItem(id));
   };
 
   const handleEdit = async (id) => {
-    try {
-      dispatch(fetchItem(id));
-      setOpen(true);
-    } catch (err) {
-      console.log(err);
-    }
+    dispatch(fetchItem(id));
+    setOpen(true);
   };
 
   return (
@@ -106,6 +99,7 @@ export default function ItemsTable() {
             </table>
           </>
         )}
+        <Toaster position="bottom-right" />
       </div>
     </div>
   );

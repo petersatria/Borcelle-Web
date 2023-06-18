@@ -25,27 +25,22 @@ export default function ModalAddCategory({ open, onClose, categoryEdit }) {
   };
 
   const handleSubmitForm = async (e) => {
-    try {
-      e.preventDefault();
-      if (!category) {
-        setIsInputValid(false);
-        throw "Error";
-      } else {
-        setIsInputValid(true);
-      }
-      if (isEdit) {
-        dispatch(updateCategories(categoryEdit.id, { name: category }));
-      } else {
-        console.log("add cat");
-        dispatch(postCategories({ name: category }));
-      }
-      setCategory("");
-      onClose();
-    } catch (err) {
-      console.log(err);
-    } finally {
+    e.preventDefault();
+    if (!category) {
+      setIsInputValid(false);
+      throw "Error";
+    } else {
+      setIsInputValid(true);
+    }
+    if (isEdit) {
+      dispatch(updateCategories(categoryEdit.id, { name: category }));
+      setIsEdit(true);
+    } else {
+      dispatch(postCategories({ name: category }));
       setIsEdit(false);
     }
+    setCategory("");
+    onClose();
   };
 
   const handleCloseModal = () => {

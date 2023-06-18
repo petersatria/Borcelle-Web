@@ -2,10 +2,7 @@ import { Link } from "react-router-dom";
 
 export default function Card({ item }) {
   return (
-    <div
-      href="#"
-      className="flex flex-col items-center bg-white border border-gray-200 shadow-sm md:flex-row md:max-w-xl hover:bg-gray-100 h-48 mt-5"
-    >
+    <div className="flex flex-col items-center bg-white border border-gray-200 shadow-sm md:flex-row md:max-w-xl hover:bg-gray-100 h-48 mt-5 mr-5">
       <img
         className="object-cover w-full h-48 md:w-48"
         src={item.imgUrl}

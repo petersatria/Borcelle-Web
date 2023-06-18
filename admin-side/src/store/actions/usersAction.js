@@ -28,9 +28,9 @@ export const registerAdmin = (payload) => {
         body: JSON.stringify(payload)
       });
       let { message } = await response.json();
-      if (!response.ok) throw { message }
+      if (!response.ok) throw message
     } catch (err) {
-      toast.error(err.message)
+      toast.error(err)
       dispatch(itemErrorMsg(err))
     }
   }

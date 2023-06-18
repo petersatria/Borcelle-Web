@@ -1,9 +1,11 @@
-import { FETCH_ITEM, FETCH_ITEMS, LOADING_FETCH } from "./actionType"
+import { FETCH_CATEGORIES, FETCH_ITEM, FETCH_ITEMS, FILTER_ITEM, LOADING_FETCH } from "./actionType"
 
 const initialState = {
   items: [],
   item: null,
-  isLoading: true
+  isLoading: true,
+  categories: [],
+  filteredItems: []
 }
 
 function rootReducer(state = initialState, action) {
@@ -12,11 +14,22 @@ function rootReducer(state = initialState, action) {
       return {
         ...state,
         items: action.payload,
+        filteredItems: action.payload
       }
     case FETCH_ITEM:
       return {
         ...state,
         item: action.payload
+      }
+    case FILTER_ITEM:
+      return {
+        ...state,
+        filteredItems: action.payload
+      }
+    case FETCH_CATEGORIES:
+      return {
+        ...state,
+        categories: action.payload
       }
     case LOADING_FETCH:
       return {
