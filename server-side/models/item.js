@@ -2,7 +2,6 @@
 const {
   Model
 } = require('sequelize');
-const { Ingredient } = require('../models')
 module.exports = (sequelize, DataTypes) => {
   class Item extends Model {
     /**
