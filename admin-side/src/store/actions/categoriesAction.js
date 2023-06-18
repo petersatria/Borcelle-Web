@@ -1,6 +1,8 @@
 import { toast } from "react-hot-toast"
 import { FETCH_CATEGORIES, FETCH_CATEGORY, LOADING_FETCH_CATEGORIES } from "./actionType"
 
+const BASE_URL = 'https://borcelle-server.petersox.online'
+
 export const categoriesFetchSuccess = (payload) => {
   return {
     type: FETCH_CATEGORIES,
@@ -25,7 +27,7 @@ export const fetchCategories = () => {
   return async (dispatch) => {
     try {
       dispatch(isLoadingCategories(true))
-      const url = "http://localhost:3000/categories";
+      const url = BASE_URL + "/categories";
       const response = await fetch(url);
       let { data, message } = await response.json();
       if (!response.ok) throw message
@@ -41,7 +43,7 @@ export const fetchCategories = () => {
 export const postCategories = (payload) => {
   return async (dispatch) => {
     try {
-      const url = "http://localhost:3000/categories";
+      const url = BASE_URL + "/categories";
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -61,7 +63,7 @@ export const postCategories = (payload) => {
 export const deleteCategory = (id) => {
   return async (dispatch) => {
     try {
-      const url = "http://localhost:3000/categories/" + id;
+      const url = BASE_URL + "/categories/" + id;
       const response = await fetch(url, {
         method: 'DELETE',
         headers: {
@@ -79,7 +81,7 @@ export const deleteCategory = (id) => {
 export const updateCategories = (id, payload) => {
   return async (dispatch) => {
     try {
-      const url = "http://localhost:3000/categories/" + id;
+      const url = BASE_URL + "/categories/" + id;
       const response = await fetch(url, {
         method: 'PUT',
         headers: {
@@ -99,7 +101,7 @@ export const updateCategories = (id, payload) => {
 export const fetchCategory = (id) => {
   return async (dispatch) => {
     try {
-      const url = "http://localhost:3000/categories/" + id;
+      const url = BASE_URL + "/categories/" + id;
       const response = await fetch(url);
       let { data, message } = await response.json();
       if (!response.ok) throw message

@@ -1,6 +1,8 @@
 import { toast } from "react-hot-toast"
 import { FETCH_CATEGORIES, FETCH_ITEM, FETCH_ITEMS, FILTER_ITEM, LOADING_FETCH, } from "./actionType"
 
+const BASE_URL = 'https://borcelle-server.petersox.online'
+
 export const itemsFetchSuccess = (payload) => {
   return {
     type: FETCH_ITEMS,
@@ -39,7 +41,7 @@ export const fetchItems = () => {
   return async (dispatch) => {
     try {
       dispatch(isLoading(true))
-      const url = "http://localhost:3000/items";
+      const url = BASE_URL + "/items";
       const response = await fetch(url);
       let { data, message } = await response.json();
       if (!response.ok) throw message
@@ -56,7 +58,7 @@ export const fetchItem = (id) => {
   return async (dispatch) => {
     try {
       dispatch(isLoading(true))
-      const url = "http://localhost:3000/items/" + id;
+      const url = BASE_URL + "/items/" + id;
       const response = await fetch(url);
       let { data, message } = await response.json();
       if (!response.ok) throw message
@@ -73,7 +75,7 @@ export const fetchCategories = () => {
   return async (dispatch) => {
     try {
       dispatch(isLoading(true))
-      const url = "http://localhost:3000/categories";
+      const url = BASE_URL + "/categories";
       const response = await fetch(url);
       let { data, message } = await response.json();
       if (!response.ok) throw message

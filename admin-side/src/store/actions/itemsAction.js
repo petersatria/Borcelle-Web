@@ -1,6 +1,8 @@
 import { toast } from "react-hot-toast"
 import { ERROR_ITEM, FETCH_ITEM, FETCH_ITEMS, LOADING_FETCH_ITEMS } from "./actionType"
 
+const BASE_URL = 'https://borcelle-server.petersox.online'
+
 export const itemsFetchSuccess = (payload) => {
   return {
     type: FETCH_ITEMS,
@@ -32,7 +34,7 @@ export const fetchItems = () => {
   return async (dispatch) => {
     try {
       dispatch(isLoadingItems(true))
-      const url = "http://localhost:3000/items";
+      const url = BASE_URL + "/items";
       const response = await fetch(url);
       let { data, message } = await response.json();
       if (!response.ok) throw message
@@ -48,7 +50,7 @@ export const fetchItems = () => {
 export const postItem = (payload) => {
   return async (dispatch) => {
     try {
-      const url = "http://localhost:3000/items";
+      const url = BASE_URL + "/items";
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -69,7 +71,7 @@ export const postItem = (payload) => {
 export const deleteItem = (id) => {
   return async (dispatch) => {
     try {
-      const url = "http://localhost:3000/items/" + id;
+      const url = BASE_URL + "/items/" + id;
       const response = await fetch(url, {
         method: 'DELETE',
         headers: {
@@ -87,7 +89,7 @@ export const deleteItem = (id) => {
 export const updateItem = (id, payload) => {
   return async (dispatch) => {
     try {
-      const url = "http://localhost:3000/items/" + id;
+      const url = BASE_URL + "/items/" + id;
       const response = await fetch(url, {
         method: 'PUT',
         headers: {
@@ -107,7 +109,7 @@ export const updateItem = (id, payload) => {
 export const fetchItem = (id) => {
   return async (dispatch) => {
     try {
-      const url = "http://localhost:3000/items/" + id;
+      const url = BASE_URL + "/items/" + id;
       const response = await fetch(url);
       let { data, message } = await response.json();
       if (!response.ok) throw message

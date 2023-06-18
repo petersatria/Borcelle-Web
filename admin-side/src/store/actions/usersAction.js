@@ -1,6 +1,8 @@
 import { toast } from "react-hot-toast";
 import { ERROR_USERS, LOGIN_ADMIN } from "./actionType";
 
+const BASE_URL = 'https://borcelle-server.petersox.online'
+
 export const loginSuccess = (payload) => {
   return {
     type: LOGIN_ADMIN,
@@ -18,7 +20,7 @@ export const itemErrorMsg = (err) => {
 export const registerAdmin = (payload) => {
   return async (dispatch) => {
     try {
-      const url = "http://localhost:3000/register";
+      const url = BASE_URL + "/register";
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -39,7 +41,7 @@ export const registerAdmin = (payload) => {
 export const loginAdmin = (payload) => {
   return async (dispatch) => {
     try {
-      const url = "http://localhost:3000/login";
+      const url = BASE_URL + "/login";
       const response = await fetch(url, {
         method: 'POST',
         headers: {
