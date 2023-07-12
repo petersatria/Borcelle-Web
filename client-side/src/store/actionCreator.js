@@ -1,7 +1,7 @@
 import { toast } from "react-hot-toast"
 import { FETCH_CATEGORIES, FETCH_ITEM, FETCH_ITEMS, FILTER_ITEM, LOADING_FETCH, } from "./actionType"
 
-const BASE_URL = 'https://borcelle-server.petersox.online'
+const BASE_URL = 'https://borcelle-server-web.petersox.online'
 
 export const itemsFetchSuccess = (payload) => {
   return {

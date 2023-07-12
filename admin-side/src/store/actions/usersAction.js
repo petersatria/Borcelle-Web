@@ -1,7 +1,7 @@
 import { toast } from "react-hot-toast";
 import { ERROR_USERS, LOGIN_ADMIN } from "./actionType";
 
-const BASE_URL = 'https://borcelle-server.petersox.online'
+const BASE_URL = 'https://borcelle-server-web.petersox.online'
 
 export const loginSuccess = (payload) => {
   return {
